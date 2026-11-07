@@ -11,15 +11,20 @@ class BukuController:
         # Menampilkan informasi role pada judul jendela aplikasi
         self.view.title(f"Sistem Manajemen Perpustakaan - Mode: {self.user_role.upper()}")
 
-        # Binding tombol simpan
+        # Binding tombol
         self.view.btn_simpan.configure(command=self.simpan_data)
+        self.view.btn_logout.configure(command=self.logout)
 
-        # OTORISASI: Jika bukan admin, nonaktifkan form input dan tombol simpan
+        # OTORISASI: Jika bukan admin, nonaktifkan form input dan tombol aksi
         if self.user_role != "admin":
             self.view.btn_simpan.configure(state="disabled", text="Akses Terkunci (Khusus Admin)")
+            self.view.btn_update.configure(state="disabled")
+            self.view.btn_hapus.configure(state="disabled")
             self.view.entry_judul.configure(state="disabled")
             self.view.entry_penulis.configure(state="disabled")
             self.view.entry_tahun.configure(state="disabled")
+
+        self.muat_data_tabel()
 
         self.muat_data_tabel()
 
@@ -35,6 +40,20 @@ class BukuController:
         if self.user_role != "admin":
             messagebox.showerror("Akses Ditolak", "Anda tidak memiliki izin untuk menambah data!")
             return
+        
+    def logout(self):
+        # Import di dalam method untuk menghindari circular import
+        # (auth_controller sudah meng-import buku_controller di bagian atasnya)
+        from controllers.auth_controller import AuthController
+        self.view.destroy()
+        AuthController().run()
+
+    def logout(self):
+        # Import di dalam method untuk menghindari circular import
+        # (auth_controller sudah meng-import buku_controller)
+        from controllers.auth_controller import AuthController
+        self.view.destroy()
+        AuthController().run()
 
         judul = self.view.entry_judul.get()
         penulis = self.view.entry_penulis.get()
