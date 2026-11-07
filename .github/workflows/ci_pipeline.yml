@@ -27,4 +27,4 @@ jobs:
 
       - name: 4. Menjalankan Automated Unit Testing (Pytest)
         run: |
-          python -m pytest -v
+          python -m pytest tests -v
